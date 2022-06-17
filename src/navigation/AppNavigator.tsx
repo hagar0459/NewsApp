@@ -5,13 +5,11 @@
 
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-// import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
+import {newsListScreen} from '../screens/newsListScreen';
+import {newsDetailsScreen} from '../screens/newsDetailsScreen';
 
-import {NewsListScreen} from '../screens/NewsListScreen';
-
-const Stack = createNativeStackNavigator();
-// const Stack = createSharedElementStackNavigator();
+const Stack = createSharedElementStackNavigator();
 
 export function AppNavigator(): JSX.Element {
   return (
@@ -20,7 +18,15 @@ export function AppNavigator(): JSX.Element {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="NewsListScreen" component={NewsListScreen} />
+        <Stack.Screen name="NewsListScreen" component={newsListScreen} />
+        <Stack.Screen
+          name="NewsDetailsScreen"
+          component={newsDetailsScreen}
+          sharedElements={(route) => {
+            const {item} = route.params;
+            return [`item${item.urlToImage}.image`];
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

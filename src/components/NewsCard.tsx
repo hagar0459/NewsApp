@@ -8,19 +8,25 @@
 import React, {FC} from 'react';
 import {Text, View, TouchableOpacity, Image} from 'react-native';
 import {newsItem} from '../redux/news';
+import {SharedElement} from 'react-navigation-shared-element';
 type Props = {
-  info: newsItem;
-  onPress(item: newsItem, geners: []): void;
-  index: number;
+  item: newsItem;
+  onPress(): void;
 };
 
 import {styles} from '../screens/styles';
 
-export const NewsCard: FC<Props> = ({info, onPress}: Props) => {
+export const NewsCard: FC<Props> = ({item, onPress}: Props) => {
   const renderContent = () => {
     return (
-      <View style={styles.cardContainer}>
-        <Image source={{uri: info.urlToImage}} resizeMode="cover" style={styles.cardImage} />
+      <TouchableOpacity
+        style={styles.cardContainer}
+        onPress={() => {
+          onPress();
+        }}>
+        <SharedElement id={`item${item.urlToImage}.image`}>
+          <Image source={{uri: item.urlToImage}} resizeMode="cover" style={styles.cardImage} />
+        </SharedElement>
         <View
           style={{
             width: '100%',
@@ -30,9 +36,9 @@ export const NewsCard: FC<Props> = ({info, onPress}: Props) => {
             alignItems: 'center',
             marginVertical: 5,
           }}>
-          <Text style={styles.title}>{info.title}</Text>
+          <Text style={styles.title}>{item.title}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (

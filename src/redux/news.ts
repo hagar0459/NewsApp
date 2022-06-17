@@ -25,10 +25,10 @@ export const fetchNews = createAsyncThunk(
       Config.API_KEY +
       '&page=' +
       props?.page +
-      '&pageSize=4' +
-      '&searchIn=title';
+      '&pageSize=10';
+
     if (props.searchTxt.length > 0) {
-      URL += '&q=' + props?.searchTxt;
+      URL += '&q=' + props?.searchTxt + '&searchIn=title';
     }
     debugger;
     const response = await fetch(URL);
@@ -48,11 +48,10 @@ const newsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchNews.pending, (state) => {
       state.loading = true;
-      state.data = [];
-      state.totalResults = 0;
     });
     builder.addCase(fetchNews.fulfilled, (state, action) => {
-      state.data = action.payload.articles.reverse();
+      debugger;
+      state.data = action.payload.articles.length > 0 ? action.payload.articles.reverse() : [];
       state.totalResults = action.payload.totalResults;
       state.loading = false;
     });

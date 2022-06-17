@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-/**
 /**
  * @flow
  * Created by Hagar Abdelghafar on 17.06.2022
@@ -13,41 +13,104 @@ import {RootState} from '../redux/store';
 import {fetchNews, newsItem} from '../redux/news';
 import {NewsCard} from '../components/NewsCard';
 import {styles} from './styles';
+import {FooterComponent} from '../components/FooterComponent';
 import ContentLoader, {Rect} from 'react-content-loader/native';
+import {useNavigation} from '@react-navigation/native';
 
-export const NewsListScreen: FC = ({}) => {
+export const newsListScreen: FC = ({}) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isFetching, setIsFetching] = useState(false);
+  const [news, setNews] = useState([]);
+  const [searchTxt, setSearchTxt] = useState('');
 
   let ref = useRef<FlatList<newsItem>>(null);
-  const {data, loading} = useSelector((state: RootState) => state.news);
+  const {data, loading, totalResults} = useSelector((state: RootState) => state.news);
 
-
+  useEffect(() => {
+    if (data.length > 0 && currentPage === 1) {
+      setNews(data);
+    } else if (data.length > 0) {
+      setNews([...news, ...data]);
+    }
+  }, [data]);
 
   useEffect(() => {
     dispatch(fetchNews({language: 'en', page: 1, searchTxt: ''}));
   }, []);
 
+  const loadMore = () => {
+    if (currentPage < totalResults / 10) {
+      let page = currentPage + 1;
+      dispatch(fetchNews({language: 'en', page: page, searchTxt: searchTxt}));
 
+      setCurrentPage(page);
+    }
+  };
 
-  const renderNewsItem = ({item, index}: ListRenderItemInfo<newsItem>) => {
-    return <NewsCard info={item} onPress={(_item: any, _geners: []) => {}} index={index} />;
+  const fetchData = () => {
+    dispatch(fetchNews({language: 'en', page: 1, searchTxt: searchTxt}));
+
+    setIsFetching(false);
+  };
+
+  const onRefresh = () => {
+    setIsFetching(true);
+    setCurrentPage(1);
+    setNews([]);
+    setSearchTxt('');
+    fetchData();
+  };
+  const renderNewsItem = ({item}: ListRenderItemInfo<newsItem>) => {
+    return (
+      <NewsCard
+        item={item}
+        onPress={() => {
+          navigation.navigate('NewsDetailsScreen', {item: item});
+        }}
+      />
+    );
   };
   return (
     <SafeAreaView>
-      {!loading ? (
+      {!loading || news.length > 0 ? (
         <View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="search..."
+              onChangeText={(text) => {
+                ref.current?.scrollToOffset({animated: true, offset: 0});
+                setSearchTxt(text);
+                setCurrentPage(1);
+                if (text && text.length > 0) {
+                  dispatch(fetchNews({language: 'en', page: currentPage, searchTxt: text}));
+                } else {
+                  setSearchTxt('');
+                  dispatch(fetchNews({language: 'en', page: currentPage, searchTxt: ''}));
+                }
+              }}
+              autoCorrect={false}
+              value={searchTxt}
+            />
+          </View>
           <FlatList
             keyboardShouldPersistTaps="never"
             ref={ref}
             style={styles.newsList}
             contentContainerStyle={styles.newsListContainer}
-            data={data}
+            data={news}
+            onRefresh={onRefresh}
+            refreshing={isFetching}
             // keyExtractor={(item) => `${item?.source?.id}`}
             renderItem={renderNewsItem}
+            onEndReached={loadMore}
+            ListFooterComponent={FooterComponent}
           />
         </View>
       ) : (
-        <View style={styles.container}>
+        <View style={{height: '100%', width: '100%'}}>
           <ContentLoader
             speed={5}
             width={400}
