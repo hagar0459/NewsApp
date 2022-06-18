@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const height = Dimensions.get('window').height;
 
-export const newsDetailsScreen: FC = ({}) => {
+export const NewsDetailsScreen: FC = ({}) => {
   const {item} = useRoute()?.params;
   const navigation = useNavigation();
 

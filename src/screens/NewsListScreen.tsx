@@ -17,7 +17,7 @@ import {FooterComponent} from '../components/FooterComponent';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import {useNavigation} from '@react-navigation/native';
 
-export const newsListScreen: FC = ({}) => {
+export const NewsListScreen: FC = ({}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [currentPage, setCurrentPage] = useState(1);
