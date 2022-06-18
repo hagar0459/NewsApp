@@ -19,9 +19,9 @@ export const fetchNews = createAsyncThunk(
   async (props: {language: string; page: number; searchTxt: string}) => {
     let URL =
       Config.API_URL +
-      '/everything?language=' +
+      '/top-headlines?language=' +
       props?.language +
-      '&domains=techcrunch.com&apiKey=' +
+      '&apiKey=' +
       Config.API_KEY +
       '&page=' +
       props?.page +
@@ -30,7 +30,6 @@ export const fetchNews = createAsyncThunk(
     if (props.searchTxt.length > 0) {
       URL += '&q=' + props?.searchTxt + '&searchIn=title';
     }
-    debugger;
     const response = await fetch(URL);
     return await response.json();
   },
@@ -50,7 +49,6 @@ const newsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchNews.fulfilled, (state, action) => {
-      debugger;
       state.data = action.payload.articles.length > 0 ? action.payload.articles.reverse() : [];
       state.totalResults = action.payload.totalResults;
       state.loading = false;

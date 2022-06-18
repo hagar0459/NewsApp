@@ -24,6 +24,8 @@ target 'Newsfeed' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'ReactNativeLocalization', :path => '../node_modules/react-native-localization'
+
   target 'NewsfeedTests' do
     inherit! :complete
     # Pods for testing

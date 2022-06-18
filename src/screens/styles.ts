@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
   itemHeader: {
     fontWeight: 'bold',
     fontSize: 18,
+    textAlign:'left',
   },
   closeButton: {
     textAlign: 'center',
@@ -86,5 +87,6 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
+    textAlign:'left',
   },
 });

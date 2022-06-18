@@ -7,7 +7,14 @@
  */
 
 import React, {FC, useRef, useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, ListRenderItemInfo, TextInput, View} from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  ListRenderItemInfo,
+  TextInput,
+  View,
+  I18nManager,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {fetchNews, newsItem} from '../redux/news';
@@ -39,20 +46,20 @@ export const NewsListScreen: FC = ({}) => {
   }, [data]);
 
   useEffect(() => {
-    dispatch(fetchNews({language: 'en', page: 1, searchTxt: ''}));
+    dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: ''}));
   }, []);
 
   const loadMore = () => {
     if (currentPage < totalResults / 10) {
       let page = currentPage + 1;
-      dispatch(fetchNews({language: 'en', page: page, searchTxt: searchTxt}));
+      dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: page, searchTxt: searchTxt}));
 
       setCurrentPage(page);
     }
   };
 
   const fetchData = () => {
-    dispatch(fetchNews({language: 'en', page: 1, searchTxt: searchTxt}));
+    dispatch(fetchNews({language:I18nManager.isRTL ? 'ar' : 'en',page: 1, searchTxt: searchTxt}));
 
     setIsFetching(false);
   };
@@ -87,10 +94,10 @@ export const NewsListScreen: FC = ({}) => {
                 setSearchTxt(text);
                 setCurrentPage(1);
                 if (text && text.length > 0) {
-                  dispatch(fetchNews({language: 'en', page: 1, searchTxt: text}));
+                  dispatch(fetchNews({language:I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: text}));
                 } else {
                   setSearchTxt('');
-                  dispatch(fetchNews({language: 'en', page: 1, searchTxt: ''}));
+                  dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: ''}));
                 }
               }}
               autoCorrect={false}
