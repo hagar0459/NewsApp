@@ -42,7 +42,7 @@ export const newsDetailsScreen: FC = ({}) => {
         <Text style={styles.itemHeader}>{item.title}</Text>
         <Text style={{marginTop: 5}}>{item.description}</Text>
         <TouchableOpacity onPress={() => Linking.openURL(item.url)}>
-          <Text> Open Article </Text>
+          <Text style={{marginVertical: 10, color: 'blue'}}> Open Article </Text>
         </TouchableOpacity>
       </View>
     </View>

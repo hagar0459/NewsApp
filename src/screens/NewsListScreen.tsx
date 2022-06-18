@@ -33,6 +33,8 @@ export const newsListScreen: FC = ({}) => {
       setNews(data);
     } else if (data.length > 0) {
       setNews([...news, ...data]);
+    } else if (totalResults === 0) {
+      setNews([]);
     }
   }, [data]);
 
@@ -85,10 +87,10 @@ export const newsListScreen: FC = ({}) => {
                 setSearchTxt(text);
                 setCurrentPage(1);
                 if (text && text.length > 0) {
-                  dispatch(fetchNews({language: 'en', page: currentPage, searchTxt: text}));
+                  dispatch(fetchNews({language: 'en', page: 1, searchTxt: text}));
                 } else {
                   setSearchTxt('');
-                  dispatch(fetchNews({language: 'en', page: currentPage, searchTxt: ''}));
+                  dispatch(fetchNews({language: 'en', page: 1, searchTxt: ''}));
                 }
               }}
               autoCorrect={false}
@@ -106,7 +108,7 @@ export const newsListScreen: FC = ({}) => {
             // keyExtractor={(item) => `${item?.source?.id}`}
             renderItem={renderNewsItem}
             onEndReached={loadMore}
-            ListFooterComponent={FooterComponent}
+            ListFooterComponent={totalResults > 0 ? FooterComponent : <></>}
           />
         </View>
       ) : (
