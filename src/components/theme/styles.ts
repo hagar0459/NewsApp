@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {I18nManager, StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   input: {
@@ -6,16 +6,16 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 18,
     paddingHorizontal: 10,
-    backgroundColor: '#dcdcdc',
     borderRadius: 10,
     marginBottom: 10,
     width: '90%',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
     marginHorizontal: '5%',
   },
   itemHeader: {
     fontWeight: 'bold',
     fontSize: 18,
-    textAlign:'left',
+    textAlign: 'left',
   },
   closeButton: {
     textAlign: 'center',
@@ -45,18 +45,30 @@ export const styles = StyleSheet.create({
   inputContainer: {
     height: 60,
     width: '100%',
-    backgroundColor: 'white',
   },
   container: {
+    backgroundColor: 'white',
+    flex: 1,
     width: '100%',
     height: '100%',
-    backgroundColor: 'white',
   },
-  newsList: {
-    backgroundColor: '#fafafa',
+  settingsImage: {
+    height: 300,
+    width: '100%',
   },
+  settingsItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 30,
+    paddingTop: 20,
+    alignItems: 'center',
+  },
+  settingsItemText: {
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+
   newsListContainer: {
-    backgroundColor: '#fafafa',
     paddingVertical: 8,
     marginHorizontal: 8,
   },
@@ -87,6 +99,34 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    textAlign:'left',
+    textAlign: 'left',
+  },
+
+  tabContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabBar: {
+    height: 60,
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    left: 16,
+    borderRadius: 16,
+  },
+  btn: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circle: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 30,
   },
 });

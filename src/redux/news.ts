@@ -30,6 +30,7 @@ export const fetchNews = createAsyncThunk(
     if (props.searchTxt.length > 0) {
       URL += '&q=' + props?.searchTxt + '&searchIn=title';
     }
+    debugger;
     const response = await fetch(URL);
     return await response.json();
   },

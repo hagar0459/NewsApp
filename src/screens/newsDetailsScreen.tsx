@@ -7,20 +7,22 @@
 
 import React, {FC} from 'react';
 import {View, Text, ImageBackground, Dimensions, TouchableOpacity, Linking} from 'react-native';
-import {styles} from './styles';
+import {styles} from '../components/theme/styles';
 import {useRoute} from '@react-navigation/native';
 import {SharedElement} from 'react-navigation-shared-element';
 import {useNavigation} from '@react-navigation/native';
 import {strings} from '../localization';
+import {useTheme} from '../components/theme/ThemeProvider';
 
 const height = Dimensions.get('window').height;
 
 export const NewsDetailsScreen: FC = ({}) => {
   const {item} = useRoute()?.params;
   const navigation = useNavigation();
+  const {theme} = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.layoutBg}]}>
       <SharedElement id={`item${item.urlToImage}.image`}>
         <ImageBackground
           style={{width: '100%', height: height / 2}}
@@ -34,7 +36,11 @@ export const NewsDetailsScreen: FC = ({}) => {
             <Text style={styles.closeButton}>X</Text>
           </TouchableOpacity>
           <View style={styles.infoContainer}>
-            <Text style={{color: 'white', marginBottom: 3, textAlign: 'left'}}>{item.author}</Text>
+            {item?.author && (
+              <Text style={{color: 'white', marginBottom: 3, textAlign: 'left'}}>
+                {item?.author}
+              </Text>
+            )}
             <Text style={{color: 'white', textAlign: 'left'}}>{item.publishedAt}</Text>
           </View>
         </ImageBackground>

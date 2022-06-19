@@ -19,10 +19,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {fetchNews, newsItem} from '../redux/news';
 import {NewsCard} from '../components/NewsCard';
-import {styles} from './styles';
+import {styles} from '../components/theme/styles';
 import {FooterComponent} from '../components/FooterComponent';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import {useNavigation} from '@react-navigation/native';
+import {strings} from '../localization';
+import {useTheme} from '../components/theme/ThemeProvider';
 
 export const NewsListScreen: FC = ({}) => {
   const dispatch = useDispatch();
@@ -34,6 +36,7 @@ export const NewsListScreen: FC = ({}) => {
 
   let ref = useRef<FlatList<newsItem>>(null);
   const {data, loading, totalResults} = useSelector((state: RootState) => state.news);
+  const {theme} = useTheme();
 
   useEffect(() => {
     if (data.length > 0 && currentPage === 1) {
@@ -52,14 +55,16 @@ export const NewsListScreen: FC = ({}) => {
   const loadMore = () => {
     if (currentPage < totalResults / 10) {
       let page = currentPage + 1;
-      dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: page, searchTxt: searchTxt}));
+      dispatch(
+        fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: page, searchTxt: searchTxt}),
+      );
 
       setCurrentPage(page);
     }
   };
 
   const fetchData = () => {
-    dispatch(fetchNews({language:I18nManager.isRTL ? 'ar' : 'en',page: 1, searchTxt: searchTxt}));
+    dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: searchTxt}));
 
     setIsFetching(false);
   };
@@ -82,22 +87,28 @@ export const NewsListScreen: FC = ({}) => {
     );
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[styles.container, {backgroundColor: theme.layoutBg}]}>
       {!loading || news.length > 0 ? (
-        <View>
-          <View style={styles.inputContainer}>
+        <View style={[styles.container, {backgroundColor: theme.layoutBg}]}>
+          <View style={[styles.inputContainer, {backgroundColor: theme.layoutBg}]}>
             <TextInput
-              style={styles.input}
-              placeholder="search..."
+              style={[
+                styles.input,
+                {backgroundColor: theme.searchContainerBg, placeholderTextColor:theme.textColor},
+              ]}
+              placeholder={strings.search}
               onChangeText={(text) => {
                 ref.current?.scrollToOffset({animated: true, offset: 0});
                 setSearchTxt(text);
                 setCurrentPage(1);
                 if (text && text.length > 0) {
-                  dispatch(fetchNews({language:I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: text}));
+                  dispatch( fetchNews({language: I18nManager.isRTL ? 'ar' : 'en',page: 1,searchTxt: text,}),
+                  );
                 } else {
                   setSearchTxt('');
-                  dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: ''}));
+                  dispatch(
+                    fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: ''}),
+                  );
                 }
               }}
               autoCorrect={false}
@@ -107,8 +118,8 @@ export const NewsListScreen: FC = ({}) => {
           <FlatList
             keyboardShouldPersistTaps="never"
             ref={ref}
-            style={styles.newsList}
-            contentContainerStyle={styles.newsListContainer}
+            style={{backgroundColor: theme.layoutBg}}
+            contentContainerStyle={[styles.newsListContainer, {backgroundColor: theme.layoutBg}]}
             data={news}
             onRefresh={onRefresh}
             refreshing={isFetching}
@@ -119,7 +130,7 @@ export const NewsListScreen: FC = ({}) => {
           />
         </View>
       ) : (
-        <View style={{height: '100%', width: '100%'}}>
+        <View style={[styles.container, {backgroundColor: theme.layoutBg}]}>
           <ContentLoader
             speed={5}
             width={400}

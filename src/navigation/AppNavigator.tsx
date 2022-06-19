@@ -4,17 +4,18 @@
  * Created by Hagar Abdelghafar on 17.06.2022
  */
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {NewsListScreen} from '../screens/NewsListScreen';
 import {NewsDetailsScreen} from '../screens/NewsDetailsScreen';
 import {SettingsScreen} from '../screens/SettingsScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {TouchableOpacity, View, StyleSheet, Text, I18nManager} from 'react-native';
+import {TouchableOpacity, View, I18nManager} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {strings} from '../localization';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useTheme} from '../components/theme/ThemeProvider';
+import {styles} from '../components/theme/styles';
 
 const Stack = createSharedElementStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,13 +25,20 @@ const TabButton = (props: {item: any; onPress: any; accessibilityState: any}) =>
   const focused = accessibilityState.selected;
   const viewRef = useRef(null);
   const circleRef = useRef(null);
-  const textRef = useRef(null);
+  const {theme} = useTheme();
+
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.container}>
-      <View ref={viewRef} style={styles.container}>
-        <View style={styles.btn}>
-          <View ref={circleRef} style={styles.circle} />
-          <Icon name={item.icon} size={20} color={focused ? 'white' : 'grey'} />
+    <TouchableOpacity onPress={onPress} activeOpacity={1} style={styles.tabContainer}>
+      <View ref={viewRef} style={styles.tabContainer}>
+        <View style={[styles.btn, {borderColor: theme.boder}]}>
+          <View
+            ref={circleRef}
+            style={[
+              styles.circle,
+              {backgroundColor: focused ? theme.primaryColor : theme.secondaryColor},
+            ]}
+          />
+          <Icon name={item.icon} size={20} color={focused ? theme.boder : theme.tabIconUnfocused} />
         </View>
       </View>
     </TouchableOpacity>
@@ -39,23 +47,23 @@ const TabButton = (props: {item: any; onPress: any; accessibilityState: any}) =>
 const TabArr = [
   {
     route: 'NewsListScreen',
-    label: strings.news_tab_title,
     icon: 'home',
     component: NewsListScreen,
   },
   {
     route: 'SettingsScreen',
-    label: strings.settings_tab_title,
     icon: 'settings',
     component: SettingsScreen,
   },
 ];
 function MyTabs() {
+  const {theme} = useTheme();
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: [styles.tabBar, {backgroundColor: theme.secondaryColor}],
       }}>
       {TabArr.map((item, index) => {
         return (
@@ -75,7 +83,6 @@ function MyTabs() {
 }
 
 export function AppNavigator(): JSX.Element {
-
   useEffect(() => {
     strings.setLanguage(I18nManager.isRTL ? 'ar' : 'en');
   }, []);
@@ -98,40 +105,3 @@ export function AppNavigator(): JSX.Element {
     </NavigationContainer>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tabBar: {
-    height: 60,
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
-    left: 16,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 16,
-  },
-  btn: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 4,
-    borderColor: 'white',
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  circle: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'blue',
-    borderRadius: 30,
-  },
-  text: {
-    fontSize: 10,
-    textAlign: 'center',
-  },
-});

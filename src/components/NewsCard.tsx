@@ -14,13 +14,16 @@ type Props = {
   onPress(): void;
 };
 
-import {styles} from '../screens/styles';
+import {styles} from './theme/styles';
+import {useTheme} from './theme/ThemeProvider';
 
 export const NewsCard: FC<Props> = ({item, onPress}: Props) => {
+  const {theme} = useTheme();
+
   const renderContent = () => {
     return (
       <TouchableOpacity
-        style={styles.cardContainer}
+        style={[styles.cardContainer, {backgroundColor: theme.cardBg}]}
         onPress={() => {
           onPress();
         }}>
