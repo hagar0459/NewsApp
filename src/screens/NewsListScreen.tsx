@@ -39,7 +39,10 @@ export const NewsListScreen: FC = ({}) => {
   const {theme} = useTheme();
 
   useEffect(() => {
+    debugger;
     if (data.length > 0 && currentPage === 1) {
+      debugger;
+      console.log('datalength'+data.length)
       setNews(data);
     } else if (data.length > 0) {
       setNews([...news, ...data]);
@@ -49,6 +52,7 @@ export const NewsListScreen: FC = ({}) => {
   }, [data]);
 
   useEffect(() => {
+    debugger;
     dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: '',pagesize:10}));
   }, []);
 

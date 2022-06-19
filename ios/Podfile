@@ -26,6 +26,8 @@ target 'Newsfeed' do
 
   pod 'ReactNativeLocalization', :path => '../node_modules/react-native-localization'
 
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
   target 'NewsfeedTests' do
     inherit! :complete
     # Pods for testing

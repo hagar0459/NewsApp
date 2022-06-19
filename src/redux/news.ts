@@ -17,6 +17,7 @@ export type newsItem = {
 export const fetchNews = createAsyncThunk(
   'news/fetchNews',
   async (props: {language: string; page: number; searchTxt: string; pagesize: number}) => {
+    debugger;
     let URL =
       Config.API_URL +
       '/top-headlines?language=' +
@@ -31,7 +32,9 @@ export const fetchNews = createAsyncThunk(
     if (props.searchTxt.length > 0) {
       URL += '&q=' + props?.searchTxt + '&searchIn=title';
     }
+    debugger;
     const response = await fetch(URL);
+    debugger;
     return await response.json();
   },
 );
