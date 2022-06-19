@@ -49,14 +49,14 @@ export const NewsListScreen: FC = ({}) => {
   }, [data]);
 
   useEffect(() => {
-    dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: ''}));
+    dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: '',pagesize:10}));
   }, []);
 
   const loadMore = () => {
     if (currentPage < totalResults / 10) {
       let page = currentPage + 1;
       dispatch(
-        fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: page, searchTxt: searchTxt}),
+        fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: page, searchTxt: searchTxt,pagesize:10}),
       );
 
       setCurrentPage(page);
@@ -64,7 +64,7 @@ export const NewsListScreen: FC = ({}) => {
   };
 
   const fetchData = () => {
-    dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: searchTxt}));
+    dispatch(fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: searchTxt,pagesize:10}));
 
     setIsFetching(false);
   };
@@ -81,7 +81,7 @@ export const NewsListScreen: FC = ({}) => {
       <NewsCard
         item={item}
         onPress={() => {
-          navigation.navigate('NewsDetailsScreen', {item: item});
+          navigation.navigate('details', {item: item});
         }}
       />
     );
@@ -102,12 +102,12 @@ export const NewsListScreen: FC = ({}) => {
                 setSearchTxt(text);
                 setCurrentPage(1);
                 if (text && text.length > 0) {
-                  dispatch( fetchNews({language: I18nManager.isRTL ? 'ar' : 'en',page: 1,searchTxt: text,}),
+                  dispatch( fetchNews({language: I18nManager.isRTL ? 'ar' : 'en',page: 1,searchTxt: text,pagesize:10}),
                   );
                 } else {
                   setSearchTxt('');
                   dispatch(
-                    fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: ''}),
+                    fetchNews({language: I18nManager.isRTL ? 'ar' : 'en', page: 1, searchTxt: '',pagesize:10}),
                   );
                 }
               }}

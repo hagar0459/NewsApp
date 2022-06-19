@@ -16,10 +16,21 @@ import Icon from 'react-native-vector-icons/Feather';
 import {strings} from '../localization';
 import {useTheme} from '../components/theme/ThemeProvider';
 import {styles} from '../components/theme/styles';
+import {ActivityIndicator} from 'react-native';
 
 const Stack = createSharedElementStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const linking = {
+  prefixes: ['newsapp://'],
+  config: {
+    screens: {
+      details: {
+        path: 'details',
+      }
+    },
+  },
+};
 const TabButton = (props: {item: any; onPress: any; accessibilityState: any}) => {
   const {item, onPress, accessibilityState} = props;
   const focused = accessibilityState.selected;
@@ -87,19 +98,18 @@ export function AppNavigator(): JSX.Element {
     strings.setLanguage(I18nManager.isRTL ? 'ar' : 'en');
   }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      linking={linking}
+      fallback={<ActivityIndicator color="blue" size="large" />}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="MyTabs" component={MyTabs} />
+        <Stack.Screen name="tabs" component={MyTabs} />
         <Stack.Screen
-          name="NewsDetailsScreen"
+          name="details/:filtertitle"
           component={NewsDetailsScreen}
-          sharedElements={(route) => {
-            const {item} = route.params;
-            return [`item${item.urlToImage}.image`];
-          }}
+        
         />
       </Stack.Navigator>
     </NavigationContainer>
