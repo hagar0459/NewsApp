@@ -5,7 +5,7 @@
  * Created by Hagar Abdelghafar on 17.06.2022
  */
 
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {Text, View, TouchableOpacity, Image} from 'react-native';
 import {newsItem} from '../redux/news';
 import {SharedElement} from 'react-navigation-shared-element';
@@ -19,7 +19,10 @@ import {useTheme} from './theme/ThemeProvider';
 
 export const NewsCard: FC<Props> = ({item, onPress}: Props) => {
   const {theme} = useTheme();
-
+  const [onLoadImage, setLoadImage] = useState(false);
+  const imageLoading = () => {
+    setLoadImage(true);
+  };
   const renderContent = () => {
     return (
       <TouchableOpacity
@@ -28,7 +31,16 @@ export const NewsCard: FC<Props> = ({item, onPress}: Props) => {
           onPress();
         }}>
         <SharedElement id={`item${item.urlToImage}.image`}>
-          <Image source={{uri: item.urlToImage}} resizeMode="cover" style={styles.cardImage} />
+          <Image
+            source={
+              onLoadImage && typeof item?.urlToImage !== 'undefined' && item?.urlToImage !== null
+                ? {uri: item?.urlToImage}
+                : require('../../imgs/default.jpg')
+            }
+            resizeMode="cover"
+            style={styles.cardImage}
+            onLoad={() => imageLoading()}
+          />
         </SharedElement>
         <View
           style={{

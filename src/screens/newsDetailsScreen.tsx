@@ -28,7 +28,11 @@ import {RootState} from '../redux/store';
 const height = Dimensions.get('window').height;
 
 export const NewsDetailsScreen: FC = ({}) => {
-  const item = useRoute()?.params?.item;
+  const {item} = useRoute()?.params;
+  const [onLoadImage, setLoadImage] = useState(false);
+  const imageLoading = () => {
+    setLoadImage(true);
+  };
   const filtertitle = useRoute()?.params?.filtertitle;
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -36,7 +40,13 @@ export const NewsDetailsScreen: FC = ({}) => {
   const {theme} = useTheme();
   const [itemDetails, setItemDetails] = useState(item);
   useEffect(() => {
-    if (typeof filtertitle !== 'undefined' && filtertitle !== null && filtertitle.length > 0) {
+    if (
+      typeof item !== 'undefined' &&
+      item !== null &&
+      typeof filtertitle !== 'undefined' &&
+      filtertitle !== null &&
+      filtertitle.length > 0
+    ) {
       dispatch(
         fetchNews({
           language: I18nManager.isRTL ? 'ar' : 'en',
@@ -49,17 +59,31 @@ export const NewsDetailsScreen: FC = ({}) => {
   }, [filtertitle]);
 
   useEffect(() => {
-    if (data.length > 0) {
-      setItemDetails(data[0]);
+    if (
+      typeof item !== 'undefined' &&
+      item !== null &&
+      typeof filtertitle !== 'undefined' &&
+      filtertitle !== null &&
+      filtertitle.length > 0
+    ) {
+      if (data.length > 0) {
+        setItemDetails(data[0]);
+      }
     }
-  }, [data]);
+  }, [data, item, filtertitle]);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.layoutBg}]}>
       <SharedElement id={`item${itemDetails?.urlToImage}.image`}>
         <ImageBackground
           style={{width: '100%', height: height / 2}}
-          source={{uri: itemDetails?.urlToImage}}
+          source={
+            onLoadImage && typeof itemDetails?.urlToImage!== 'undefined' && itemDetails?.urlToImage !== null
+              ? {uri: itemDetails?.urlToImage}
+              : require('../../imgs/default.jpg')
+          }
+          onLoad={() => imageLoading()}
+
           resizeMode={'cover'}>
           <TouchableOpacity
             style={styles.closeButttonContainer}

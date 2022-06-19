@@ -26,7 +26,7 @@ const linking = {
   config: {
     screens: {
       details: {
-        path: 'details',
+        path: 'details/:filtertitle',
       }
     },
   },
@@ -107,9 +107,12 @@ export function AppNavigator(): JSX.Element {
         }}>
         <Stack.Screen name="tabs" component={MyTabs} />
         <Stack.Screen
-          name="details/:filtertitle"
+          name="details"
           component={NewsDetailsScreen}
-        
+          sharedElements={(route) => {
+            const {item} = route.params;
+            return [`item${item.urlToImage}.image`];
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

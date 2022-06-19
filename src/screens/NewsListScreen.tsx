@@ -85,6 +85,7 @@ export const NewsListScreen: FC = ({}) => {
       <NewsCard
         item={item}
         onPress={() => {
+          debugger;
           navigation.navigate('details', {item: item});
         }}
       />
